@@ -6,16 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Store.Web.Controllers
 {
+    // /searh?query-blb
     public class SearchController : Controller
     {
-        private readonly IBookRepresetory bookRepresetory;
-        public SearchController(IBookRepresetory bookRepresetory)
+        private readonly BookService bookService;
+        public SearchController(BookService bookService)
         {
-            this.bookRepresetory = bookRepresetory;
+            this.bookService = bookService;
         }
         public IActionResult Index(string query)
         {
-            var books = bookRepresetory.GetAllByTitle(query);
+            var books = bookService.GetAllByQuery(query);
             return View(books);
         }
     }

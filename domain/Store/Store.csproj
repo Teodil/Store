@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Book.cs" />
+    <Compile Include="BookService.cs" />
+    <Compile Include="AssamblyProperties.cs" />
     <Compile Include="IBookRepresetory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
