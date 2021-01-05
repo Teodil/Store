@@ -25,6 +25,14 @@ namespace Store.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(20);//Время жизни сессии
+                options.Cookie.HttpOnly = true;// к куки файлам есть доступ только у серверных скриптов 
+                options.Cookie.IsEssential = true;//Означает что куки использутся только для тех нужд
+            });
+
             services.AddSingleton<IBookRepresetory, BookRepresetory>();
             services.AddSingleton<BookService>();
         }
@@ -48,6 +56,8 @@ namespace Store.Web
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();//Активация сессии
 
             app.UseEndpoints(endpoints =>
             {

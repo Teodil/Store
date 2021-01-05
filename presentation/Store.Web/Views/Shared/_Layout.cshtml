@@ -15,6 +15,23 @@
                 <input class="form-control mr-sm-2" type="search" name="query" placeholder="Автор или название книги" />
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Поиск</button>
             </form>
+            <span class="navbar-text ml-auto">
+                @{ 
+                    Cart cart;
+                    if (!Context.Session.TryGetCart(out cart))
+                        cart = new Cart();
+
+                    if (cart.Items.Count == 0)
+                    {
+                        @:Крозина пуста
+                    }
+                    else
+                    {
+                        @:Товаров @cart.Items.Count на сумму @cart.Amount;
+                    }
+                }
+
+            </span>
         </nav>
     </header>
     <div class="container">
