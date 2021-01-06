@@ -9,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Store.Memory;
+using Store.Messages;
+
 
 namespace Store.Web
 {
@@ -33,6 +35,7 @@ namespace Store.Web
                 options.Cookie.IsEssential = true;//ќзначает что куки использутс€ только дл€ тех нужд
             });
 
+            services.AddSingleton<INotificationService, DebugNotificationService>();
             services.AddSingleton<IOrderRepresetory, OrderRepresetory>();
             services.AddSingleton<IBookRepresetory, BookRepresetory>();
             services.AddSingleton<BookService>();
