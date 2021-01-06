@@ -26,9 +26,13 @@ namespace Store.Memory
 
         public Book[] GetAllByTitleOrAuthor(string titleOrAuthor)
         {
-            return books.Where(book => book.Author.Contains(titleOrAuthor)
-                                    || book.Title.Contains(titleOrAuthor))
+            if (titleOrAuthor != null)
+            {
+                return books.Where(book => book.Author.Contains(titleOrAuthor)
+                        || book.Title.Contains(titleOrAuthor))
                         .ToArray();
+            }
+            return books;
         }
 
         public Book GetById(int id)

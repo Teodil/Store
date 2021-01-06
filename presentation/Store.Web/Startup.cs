@@ -33,6 +33,7 @@ namespace Store.Web
                 options.Cookie.IsEssential = true;//ќзначает что куки использутс€ только дл€ тех нужд
             });
 
+            services.AddSingleton<IOrderRepresetory, OrderRepresetory>();
             services.AddSingleton<IBookRepresetory, BookRepresetory>();
             services.AddSingleton<BookService>();
         }
