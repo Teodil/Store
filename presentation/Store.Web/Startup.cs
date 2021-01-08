@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Store.Contractors;
 using Store.Memory;
 using Store.Messages;
 
@@ -38,6 +39,7 @@ namespace Store.Web
             services.AddSingleton<INotificationService, DebugNotificationService>();
             services.AddSingleton<IOrderRepresetory, OrderRepresetory>();
             services.AddSingleton<IBookRepresetory, BookRepresetory>();
+            services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
             services.AddSingleton<BookService>();
         }
 

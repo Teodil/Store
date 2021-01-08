@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Store.Messages;
 using Microsoft.AspNetCore.Http;
+using Store.Contractors;
 
 namespace Store.Web.Controllers
 {
@@ -15,12 +16,16 @@ namespace Store.Web.Controllers
         private readonly IBookRepresetory bookRepresetory;
         private readonly IOrderRepresetory orderRepresetory;
         private readonly INotificationService notificationService;
-
-        public OrderController(IBookRepresetory bookRepresetory, IOrderRepresetory orderRepresetory,INotificationService notificationService)
+        private readonly IEnumerable<IDeliveryService> deliveryServices;
+        public OrderController(IBookRepresetory bookRepresetory,
+                                IOrderRepresetory orderRepresetory,
+                                INotificationService notificationService,
+                                IEnumerable<IDeliveryService> deliveryServices)
         {
             this.bookRepresetory = bookRepresetory;
             this.orderRepresetory = orderRepresetory;
             this.notificationService = notificationService;
+            this.deliveryServices = deliveryServices;
         }
         [HttpPost]
         public IActionResult SendConfirmationCode(int id,string cellPhone)
@@ -37,7 +42,7 @@ namespace Store.Web.Controllers
             HttpContext.Session.SetInt32(cellPhone, code);
             notificationService.SendConfirmationCode(cellPhone, code);
 
-             return View("Confirmation",new ConfirmationModel
+             return View("Confirmation", new ConfirmationModel
              {
                  OrderId=id,
                  CellPhone =cellPhone,
@@ -154,7 +159,7 @@ namespace Store.Web.Controllers
             return RedirectToAction("Index", "Order");
         }
         [HttpPost]
-        public IActionResult StartDelivery(int id,string cellPhone,int code)
+        public IActionResult Confirmate(int id,string cellPhone,int code)
         {
             int? storedCode = HttpContext.Session.GetInt32(cellPhone);
             if(storedCode == null)
@@ -183,8 +188,40 @@ namespace Store.Web.Controllers
                 });
             }
 
-            //
-            return View();
+            //Todo:Сохранить CellPhone
+            HttpContext.Session.Remove(cellPhone);
+
+            var model = new DeliveryModel
+            {
+                OrderId = id,
+                Methods = deliveryServices.ToDictionary(service => service.UniqueCode,
+                                                      service => service.Title),
+            };
+
+            return View("DeliveryMethod",model);
+        }
+        [HttpPost]
+        public IActionResult StartDelivery(int id,string uniqueCode)
+        {
+            var deliveryService = deliveryServices.Single(service => service.UniqueCode == uniqueCode);
+            var order = orderRepresetory.GetById(id);
+
+            var form = deliveryService.CreateForm(order);
+
+            return View("DeliveryStep", form);
+        }
+        [HttpPost]
+        public IActionResult NextDelivery(int id,string uniqueCode,int step,Dictionary<string,string> values)
+        {
+            var deliveryService = deliveryServices.Single(service => service.UniqueCode == uniqueCode);
+
+            var form = deliveryService.MoveNext(id, step, values);
+            if (form.IsFinal)
+            {
+                return null;
+            }
+
+            return View("DeliveryStep", form);
         }
     }
 }

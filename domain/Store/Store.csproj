@@ -44,6 +44,10 @@
     <Compile Include="Book.cs" />
     <Compile Include="BookService.cs" />
     <Compile Include="AssamblyProperties.cs" />
+    <Compile Include="Contractors\Field.cs" />
+    <Compile Include="Contractors\Form.cs" />
+    <Compile Include="Contractors\IDeliveryService.cs" />
+    <Compile Include="Contractors\PostamateDeliveryService.cs" />
     <Compile Include="IBookRepresetory.cs" />
     <Compile Include="IOrderRepresetory.cs" />
     <Compile Include="Messages\DebugNotificationService.cs" />
