@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Store.Messages;
 using Microsoft.AspNetCore.Http;
 using Store.Contractors;
+using Store.Web.Contractors;
 
 namespace Store.Web.Controllers
 {
@@ -18,18 +19,21 @@ namespace Store.Web.Controllers
         private readonly INotificationService notificationService;
         private readonly IEnumerable<IDeliveryService> deliveryServices;
         private readonly IEnumerable<IPaymentService> paymentServices;
+        private readonly IEnumerable<IWebContractorServise> webContractorServises;
 
         public OrderController(IBookRepresetory bookRepresetory,
                                 IOrderRepresetory orderRepresetory,
                                 INotificationService notificationService,
                                 IEnumerable<IDeliveryService> deliveryServices,
-                                IEnumerable<IPaymentService> paymentServices)
+                                IEnumerable<IPaymentService> paymentServices,
+                                IEnumerable<IWebContractorServise> webContractorServises)
         {
             this.bookRepresetory = bookRepresetory;
             this.orderRepresetory = orderRepresetory;
             this.notificationService = notificationService;
             this.deliveryServices = deliveryServices;
             this.paymentServices = paymentServices;
+            this.webContractorServises = webContractorServises;
         }
         [HttpPost]
         public IActionResult SendConfirmationCode(int id,string cellPhone)
@@ -250,6 +254,13 @@ namespace Store.Web.Controllers
 
             var form = paymentService.CreateForm(order);
 
+            var webContractorServise = webContractorServises.SingleOrDefault(service => service.UniqueCode == uniqueCode);
+
+            if(webContractorServise != null)
+            {
+                return Redirect(webContractorServise.GetUrl);
+            }
+
             return View("PaymentStep", form);
         }
         [HttpPost]
@@ -269,5 +280,13 @@ namespace Store.Web.Controllers
 
             return View("PaymentStep", form);
         }
+        
+        public IActionResult Finish()
+        {
+            HttpContext.Session.RemoveCart();
+
+            return View();
+        }
+
     }
 }
