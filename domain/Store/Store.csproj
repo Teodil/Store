@@ -44,8 +44,10 @@
     <Compile Include="Book.cs" />
     <Compile Include="BookService.cs" />
     <Compile Include="AssamblyProperties.cs" />
+    <Compile Include="Contractors\CashPaymentService.cs" />
     <Compile Include="Contractors\Field.cs" />
     <Compile Include="Contractors\Form.cs" />
+    <Compile Include="Contractors\IPaymentService.cs" />
     <Compile Include="Contractors\IDeliveryService.cs" />
     <Compile Include="Contractors\PostamateDeliveryService.cs" />
     <Compile Include="IBookRepresetory.cs" />
@@ -53,6 +55,8 @@
     <Compile Include="Messages\DebugNotificationService.cs" />
     <Compile Include="Messages\INotificationService.cs" />
     <Compile Include="Order.cs" />
+    <Compile Include="OrderPayment.cs" />
+    <Compile Include="OrderDelivery.cs" />
     <Compile Include="OrderItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

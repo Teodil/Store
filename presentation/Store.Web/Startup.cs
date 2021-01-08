@@ -40,6 +40,7 @@ namespace Store.Web
             services.AddSingleton<IOrderRepresetory, OrderRepresetory>();
             services.AddSingleton<IBookRepresetory, BookRepresetory>();
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
+            services.AddSingleton<IPaymentService, CashPaymentService>();
             services.AddSingleton<BookService>();
         }
 
