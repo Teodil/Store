@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.Web.App;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,15 @@ namespace Store.Web.Controllers
 {
     public class BookController : Controller
     {
-        private readonly IBookRepresetory bookRepresetory;
-        public BookController(IBookRepresetory bookRepresetory)
+        private readonly BookService bookService;
+        public BookController(BookService bookService)
         {
-            this.bookRepresetory = bookRepresetory;
+            this.bookService = bookService;
         }
         public IActionResult Index(int id)
         {
-            Book book = bookRepresetory.GetById(id);
-            return View(book);
+            var model = bookService.GetById(id);
+            return View(model);
         }
     }
 }

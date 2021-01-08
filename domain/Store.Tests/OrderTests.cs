@@ -32,8 +32,8 @@ namespace Store.Tests
         {
             var order = new Order(1, new[]
             {
-                new OrderItem(1,3,10m),
-                new OrderItem(2,5,100m),
+                new OrderItem(1,10m,3),
+                new OrderItem(2,100m,5),
             });
 
             Assert.Equal(3 + 5, order.TotalCount);
@@ -44,8 +44,8 @@ namespace Store.Tests
         {
             var order = new Order(1, new[]
             {
-                new OrderItem(1,3,10m),
-                new OrderItem(2,5,100m),
+                new OrderItem(1,10m,3),
+                new OrderItem(2,100m,5),
             });
 
             Assert.Equal(3 * 10m + 5 * 100m, order.TotalPrice);
