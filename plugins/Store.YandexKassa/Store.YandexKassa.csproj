@@ -10,6 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="libphonenumber-csharp" Version="8.12.14" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="1.0.19269.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\domain\Store\Store.csproj" />
     <ProjectReference Include="..\..\presentation\Store.Web.Contractors\Store.Web.Contractors.csproj" />
   </ItemGroup>

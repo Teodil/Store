@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store
+namespace Store.Web.App
 {
     public class BookService//Служба для обратоки запроса по книгами
     {
-        private readonly IBookRepresetory bookRepresetory;
-        public BookService(IBookRepresetory bookRepresetory)
+        private readonly IBookRepository bookRepresetory;
+        public BookService(IBookRepository bookRepresetory)
         {
             this.bookRepresetory = bookRepresetory;
         }

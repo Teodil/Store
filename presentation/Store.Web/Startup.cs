@@ -9,8 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Store.Contractors;
-using Store.Memory;
 using Store.Messages;
+using Store.Web.App;
+using Store.Data.EF;
 using Store.Web.Contractors;
 using Store.YandexKassa;
 
@@ -29,6 +30,7 @@ namespace Store.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();//Http accessor.
             services.AddControllersWithViews();
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
@@ -38,14 +40,15 @@ namespace Store.Web
                 options.Cookie.IsEssential = true;//Означает что куки использутся только для тех нужд
             });
 
+            services.AddEfRepositories(Configuration.GetConnectionString("Store"));
+
             services.AddSingleton<INotificationService, DebugNotificationService>();
-            services.AddSingleton<IOrderRepresetory, OrderRepresetory>();
-            services.AddSingleton<IBookRepresetory, BookRepresetory>();
             services.AddSingleton<IDeliveryService, PostamateDeliveryService>();
             services.AddSingleton<IPaymentService, CashPaymentService>();
             services.AddSingleton<IPaymentService, YandexKassaPaymentService>();
-            services.AddSingleton<IWebContractorServise, YandexKassaPaymentService>();
+            services.AddSingleton<IWebContractorService, YandexKassaPaymentService>();
             services.AddSingleton<BookService>();
+            services.AddSingleton<OrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +75,11 @@ namespace Store.Web
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "{area:exists}/{controller=home}/{action=Index}/{id?}"
+                    );
+
                 // controller/action/{id}
                 // book
                 // book/index
@@ -80,13 +88,6 @@ namespace Store.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
-                //Точка входа в яндекс
-                endpoints.MapAreaControllerRoute(
-                    name: "yandex.kassa",
-                    areaName: "YandexKassa",
-                    pattern: "YandexKassa/{controller=Home}/{action=Index}/{id?}"
-                    );
             });
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Store.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,31 +10,96 @@ namespace Store
 {
     public class Book
     {
-        public int Id { get; }
-        public string Isbn { get; }
-        public string Author { get; }//Не нормализованные данные, надо по id
-        public string Title { get; }
-        public string Description { get; }
-        public decimal Price { get; }
+        private readonly BookDto dto;
 
-        public Book(int id, string title, string isbn, string author, string description, decimal price)
+        public int Id => dto.Id;
+        public string Isbn
         {
-            Id = id;
-            Isbn = isbn;
-            Author = author;
-            Title = title;
-            Description = description;
-            Price = price;
+            get => dto.Isbn;
+            set => dto.Isbn = value;
         }
-        
-        public static bool IsIsbn(string s)
+        public string Author
         {
-            if (s == null)
+            get => dto.Author;
+            set => dto.Author = value?.Trim();
+        }
+        public string Title
+        {
+            get => dto.Title;
+            set
+            {
+                if (TryFormatIsbn(value, out string formattedIsbn))
+                    dto.Isbn = formattedIsbn;
+                else
+                    throw new ArgumentException(nameof(Isbn));
+            }
+        }
+        public string Description
+        {
+            get => dto.Description;
+            set => dto.Description = value;
+        }
+        public decimal Price
+        {
+            get => dto.Price;
+            set => dto.Price = value;
+        }
+
+        internal Book(BookDto dto)
+        {
+            this.dto = dto;
+        }
+
+        public static bool TryFormatIsbn(string isbn, out string formattedIsbn)
+        {
+            if (isbn == null)
+            {
+                formattedIsbn = null;
                 return false;
-            s = s.Replace("-", "")
-                .Replace(" ", "")
-                .ToUpper();
-            return Regex.IsMatch(s, @"^ISBN\d{10}(\d{3})?$");
+            }
+
+            formattedIsbn = isbn.Replace("-", "")
+                                .Replace(" ", "")
+                                .ToUpper();
+
+            return Regex.IsMatch(formattedIsbn, @"^ISBN\d{10}(\d{3})?$");
+        }
+
+        public static bool IsIsbn(string s) 
+            => TryFormatIsbn(s, out _);
+
+
+        public static class DtoFactory
+        {
+            public static BookDto Create(string isbn,string author,
+                                         string tittle, string description,
+                                         decimal price)
+            {
+                if (TryFormatIsbn(isbn, out string formattedIsbn))
+                    isbn = formattedIsbn;
+                else
+                    throw new ArgumentException(nameof(isbn));
+
+                if (string.IsNullOrEmpty(tittle))
+                    throw new ArgumentException(nameof(tittle));
+
+                return new BookDto
+                {
+                    Isbn = isbn,
+                    Author = author?.Trim(),
+                    Title = tittle.Trim(),
+                    Description = description?.Trim(),
+                    Price = price,
+                };
+            }
+        }
+
+
+        public static class Mapper
+        {
+            public static Book Map(BookDto dto) => new Book(dto);
+
+            public static BookDto Map(Book domain) => domain.dto;
         }
     }
 }

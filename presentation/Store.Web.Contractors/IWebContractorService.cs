@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Store.Web.Contractors
 {
-    public interface IWebContractorServise
+    public interface IWebContractorService
     {
-        string UniqueCode { get; }
-        string GetUrl { get; }
+        string Name { get; }
+        Uri StartSession(IReadOnlyDictionary<string, string> parameter, Uri returnUri);
 
     }
 }

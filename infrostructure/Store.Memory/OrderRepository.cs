@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Store.Memory
 {
-    public class OrderRepresetory : IOrderRepresetory
+    public class OrderRepository : IOrderRepository
     {
         private readonly List<Order> orders = new List<Order>();
         public Order Create()
